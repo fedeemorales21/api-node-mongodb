@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const route = Router()
-
+const { unlink } = require('fs')
 const Post = require('../models/Post')
 
 route.get('/', async (req,res) =>{
@@ -15,13 +15,15 @@ route.get('/:id', async (req,res) =>{
 
 route.post('/', async (req,res) =>{
     const { title,content,author } = req.body
-    const newPost = new Post(title,content,author)
+    const imagePath =`/photos/${req.file.filename}`
+    const newPost = new Post(title,content,author,imagePath)
     await newPost.save()
     res.json({success:true})
 })
 
 route.delete('/:id', async (req,res) =>{
-   await Post.findByIdAndDelete(req.params.id)
+   const post = await Post.findByIdAndDelete(req.params.id)
+    unlink(path.resolve('./public'+ post.imagePath))
     res.json({success:true})
 })
 
