@@ -6,7 +6,9 @@ if (process.env.NODE_ENV == 'development') {
 const express = require('express')
 const morgan = require('morgan')
 const multer = require('multer')
+const cors = require('cors')
 const path = require('path')
+
 
 
 // init
@@ -28,6 +30,7 @@ const stg =  multer.diskStorage({
 app.use(multer({stg}).single('image'))
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
+app.use(cors())
 
 // routes
 app.use('/api/posts', require('./routes/posts'))
